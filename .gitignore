@@ -1,0 +1,4 @@
+tests/.vagrant/
+tests/*.retry
+*.pyc
+*.pyo

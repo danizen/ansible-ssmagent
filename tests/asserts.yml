@@ -1,0 +1,34 @@
+# Check that the system is properly provisioned
+---
+- stat:
+    path: /usr/pgsql-11/bin/psql
+  register: _psql
+
+- stat:
+    path: /usr/pgsql-11/bin/pg_config
+  register: _pgconfig
+
+- stat:
+    path: /usr/pgsql-11/include/sqlda.h
+  register: _sqlda_h
+
+- stat:
+    path: /usr/pgsql-11/lib/libpq.so.5
+  register: _libpq_so
+
+- name: psql binary exists
+  assert:
+    that: _psql.stat.exists == true
+
+- name: pg_config binary exists
+  assert:
+    that: _pgconfig.stat.exists == true
+
+- name: sqlda.h include file exists
+  assert:
+    that: _sqlda_h.stat.exists == true
+
+- name: libpq.so.5 exists
+  assert:
+    that: _libpq_so.stat.exists == true
+

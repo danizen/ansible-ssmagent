@@ -1,0 +1,14 @@
+---
+
+# Test playbook for occsab-ruby
+
+- hosts: all
+  connection: local
+  become: true
+
+  roles:
+    - role: ansible-ssmagent
+
+  tasks:
+    - import_tasks: asserts.yml
+

@@ -1,0 +1,30 @@
+---
+- name: Install postgres.org gpg key
+  copy:
+    src: "{{ role_path }}/files/RPM-GPG-KEY-PGDG"
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Setup postgres.org yum repository
+  yum_repository:
+    name: "pgdg{{ postgresql_version }}"
+    description: "Postgres.org version {{ postgresql_version }} RHEL repository"
+    file: "pgdg-redhat-{{ postgresql_version }}"
+    baseurl: "https://download.postgresql.org/pub/repos/yum/{{ postgresql_version }}/redhat/rhel-$releasever-$basearch"
+    gpgcheck: yes
+    enabled: yes
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+
+- name: Install postgres11 rpms 
+  yum:
+    name:
+      - postgresql11-libs
+      - postgresql11
+      - postgresql11-devel
+      - postgresql-jdbc
+      - pgbouncer
+    state: latest
+
+
