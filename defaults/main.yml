@@ -1,3 +1,2 @@
 ---
-use_region: false
-region_name: us-east-1
+ssmagent_region_name: us-east-1

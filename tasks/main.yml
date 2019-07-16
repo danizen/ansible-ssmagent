@@ -1,30 +1,20 @@
 ---
-- name: Install postgres.org gpg key
-  copy:
-    src: "{{ role_path }}/files/RPM-GPG-KEY-PGDG"
-    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+- name: Download amazon-ssm-agent rpm
+  get_url:
+    url: https://s3.{{ ssmagent_region_name }}.amazonaws.com/amazon-ssm-{{ ssmagent_region_name }}/latest/linux_amd64/amazon-ssm-agent.rpm
+    dest: /tmp/amazon-ssm-agent.rpm
     owner: root
     group: root
     mode: '0644'
 
-- name: Setup postgres.org yum repository
-  yum_repository:
-    name: "pgdg{{ postgresql_version }}"
-    description: "Postgres.org version {{ postgresql_version }} RHEL repository"
-    file: "pgdg-redhat-{{ postgresql_version }}"
-    baseurl: "https://download.postgresql.org/pub/repos/yum/{{ postgresql_version }}/redhat/rhel-$releasever-$basearch"
-    gpgcheck: yes
-    enabled: yes
-    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
-
-- name: Install postgres11 rpms 
+- name: Install amazon-ssm-agent rpm
   yum:
-    name:
-      - postgresql11-libs
-      - postgresql11
-      - postgresql11-devel
-      - postgresql-jdbc
-      - pgbouncer
-    state: latest
+    name: /tmp/amazon-ssm-agent.rpm
+    state: present
 
+- name: Start and enable service
+  systemd:
+    name: amazon-ssm-agent.service
+    enabled: yes
+    state: started
 
